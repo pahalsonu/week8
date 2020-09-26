@@ -77,3 +77,17 @@ lib.update = (dir, file, data, callback) => {
         }
     })
 }
+
+//Delete the File
+lib.delete = (dir, file, callback) => {
+    //Unlinking or deleting
+    fs.unlink(lib.baseDir + dir + '/' + file + '.json', (err) => {
+        if (!err) {
+            callback(false);
+        } else {
+            callback("Error in Deleting File");
+        }
+    })
+}
+
+module.exports = lib;

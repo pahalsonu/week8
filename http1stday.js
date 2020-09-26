@@ -19,22 +19,22 @@ const http = require('http');
 const urll = require('url');
 const fs = require('fs');
 const port = process.env.PORT || 8080;
-const server = http.createServer((re,ren)=>{
-   let q = urll.parse(re.url,true).query;
-   let fname = q.fname;
-   let email = q.email;
-   let password = q.password;
-   let out = `${fname}  ${email}  ${password}`;
-   fs.writeFile('form24092020_data.txt', out, (err)=>{
-       if(err){
-           ren.statusCode = 500;
-           ren.end("<h1>Server Error</h1>");
-       }else{
-           ren.statusCode = 200;
-           ren.end("<h1> Data Saved Successfully</h1>");
-       }
-   });
+const server = http.createServer((re, ren) => {
+    let q = urll.parse(re.url, true).query;
+    let fname = q.fname;
+    let email = q.email;
+    let password = q.password;
+    let out = `${fname}  ${email}  ${password}`;
+    fs.writeFile('form24092020_data.txt', out, (err) => {
+        if (err) {
+            ren.statusCode = 500;
+            ren.end("<h1>Server Error</h1>");
+        } else {
+            ren.statusCode = 200;
+            ren.end("<h1> Data Saved Successfully</h1>");
+        }
+    });
 })
-server.listen(port, ()=>{
+server.listen(port, () => {
     console.log(`Server Started at ${port}`);
 });
