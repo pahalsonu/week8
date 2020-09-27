@@ -7,6 +7,7 @@ const decoder = new stringDecoder('utf-8');
 const handlers = require('./routers');
 const port = 8080;
 const helpers = require('./helpers');
+const { parseJsonToObject } = require('./helpers');
 
 
 
@@ -31,12 +32,12 @@ const server = http.createServer((req, res) => {
         buffer += decoder.end();
         const chosenHandler = typeof(routers[path]) != 'undefined' ? routers[path] : handelers.notFound;
 
-        const data = {
+        const data = { 
             'path': path,
             'method': method,
-            'payload': buffer
+            'payload': helpers.parseJsonToObject(buffer)
         }
-
+console.log(data.payload)
         chosenHandler(data, (statusCode, payload) => {
             statusCode = typeof(statusCode) == 'number' ? statusCode : 200;
             payload = typeof(payload) == 'object' ? payload : {};

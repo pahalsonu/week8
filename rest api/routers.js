@@ -18,16 +18,20 @@ handlers.users = (data, callback) => {
 handlers._users = {};
 
 handlers._users.post = (data, callback) => {
-    data.payload = JSON.parse(data.payload);
+   
+ 
 
-    data.firstName = typeof(data.payload.firstName) === 'string' && data.payload.firstName.trim().length > 0 ? data.payload.firstName.trim() : false;
-    data.lastName = typeof(data.payload.lastName) === 'string' && data.payload.lastName.trim().length > 0 ? data.payload.lastName.trim() : false;
-    data.phone = typeof(data.payload.phone) === 'string' && data.payload.phone.length > 10 ? data.payload.phone : false;
-    data.email = typeof(data.payload.email) === 'string' && data.payload.email.trim().length > 0 ? data.payload.email.trim() : false;
-    data.terms = typeof(data.payload.terms) === 'string' && data.payload.terms.trims === true ? true : false;
-    data.password = typeof(data.payload.password) === 'string' && data.payload.password.trim().length > 8 ? data.payload.password : false;
-    data.id = typeof(data.payload.id) === 'string' && data.payload.id.trim().length > 0 ? data.payload.id.trim() : false;
-    if (firstName && lastName && phone && term && emai && password && terms) {
+ firstName = typeof(data.payload.firstName) === 'string' && data.payload.firstName.trim().length > 0 ? data.payload.firstName.trim() : false;
+
+
+ lastName = typeof(data.payload.lastName) === 'string' && data.payload.lastName.trim().length > 0 ? data.payload.lastName.trim() : false;
+ phone = typeof(data.payload.phone) === 'string' && data.payload.phone.length >= 10 ? data.payload.phone : false;
+    // data.email = typeof(data.payload.email) === 'string' && data.payload.email.trim().length > 0 ? data.payload.email.trim() : false;
+    terms = data.payload.terms === true ? true : false;
+    password = typeof(data.payload.password) === 'string'   ? data.payload.password : false;
+  
+    // data.id = typeof(data.payload.id) === 'string' && data.payload.id.trim().length > 0 ? data.payload.id.trim() : false;
+    if (firstName && lastName && phone && password && terms) {
 
         fileSystem.read('users', phone, (err, data) => {
             if (err) {
@@ -38,10 +42,10 @@ handlers._users.post = (data, callback) => {
                         'firstName': firstName,
                         'lastName': lastName,
                         'phone': phone,
-                        'email': email,
+                       
                         'hashedPassword': hashedPassword,
                         'terms': true,
-                        'id': id
+                        
                     }
                     fileSystem.create('users', phone, userObject, (err) => {
                         if (!err) {
@@ -52,7 +56,7 @@ handlers._users.post = (data, callback) => {
                         }
                     })
                 } else {
-                    callback('hasing not done')
+                    callback('hashing not done')
                 }
 
             } else {
@@ -60,6 +64,8 @@ handlers._users.post = (data, callback) => {
             }
         })
 
+    } else {
+        console.log('condtion not true')
     }
 
 

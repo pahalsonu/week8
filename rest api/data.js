@@ -34,7 +34,7 @@ fileSystem.create = (dir, file, data, callback) => {
 }
 fileSystem.read = (dir, file, callback) => {
 
-    fs.readFile(lib.baseDir + dir + '/' + file + '.json', 'utf-8', (err, data) => {
+    fs.readFile(fileSystem.workingDirectory+ dir + '/' + file + '.json', 'utf-8', (err, data) => {
         callback(err, data);
     })
 
