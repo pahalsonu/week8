@@ -10,17 +10,13 @@ const helpers = require('./helpers');
 const { parseJsonToObject } = require('./helpers');
 
 
-
-
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true)
         // console.log(parsedUrl);
 
     const path = parsedUrl.pathname;
-
+    const queryStringObject = parsedUrl.query;
     const method = req.method.toLowerCase();
-
-
 
     let buffer = "";
     req.on('data', (data) => {
@@ -30,14 +26,15 @@ const server = http.createServer((req, res) => {
 
     req.on('end', () => {
         buffer += decoder.end();
-        const chosenHandler = typeof(routers[path]) != 'undefined' ? routers[path] : handelers.notFound;
+        const chosenHandler = typeof(routers[path]) != 'undefined' ? routers[path] : handlers.notFound;
 
         const data = { 
             'path': path,
+            'queryStringObject' :queryStringObject,
             'method': method,
             'payload': helpers.parseJsonToObject(buffer)
         }
-console.log(data.payload)
+        console.log(data.method);
         chosenHandler(data, (statusCode, payload) => {
             statusCode = typeof(statusCode) == 'number' ? statusCode : 200;
             payload = typeof(payload) == 'object' ? payload : {};
@@ -45,6 +42,7 @@ console.log(data.payload)
             res.setHeader('Content-Type', 'application/json');
             res.writeHead(statusCode);
             res.end(payloadString);
+
             console.log(statusCode, payloadString);
         })
 

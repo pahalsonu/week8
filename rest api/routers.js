@@ -8,6 +8,7 @@ handlers.users = (data, callback) => {
     const acceptableMethods = ['post', 'get', 'put', 'delete'];
 
     if (acceptableMethods.indexOf(data.method) > -1) {
+        console.log(data.method)
         handlers._users[data.method](data, callback);
 
     } else {
@@ -70,6 +71,32 @@ handlers._users.post = (data, callback) => {
 
 
 
+    
+}
+
+
+// GET Method for /users
+//Required Data (Query Params) : Phone Number
+//Optional Data : none
+//It is a Private Route, Only logged in users can query user data
+handlers._users.get = (data, callback) => {
+    //Check if Phone Number is Valid
+    console.log(data.queryStringObject.phone)
+    const phone = typeof (data.queryStringObject.phone) === 'string' && data.queryStringObject.phone.trim().length === 10 ? data.queryStringObject.phone.trim() : false;
+    if (phone) {
+        //Look up for a user
+        fileSystem.read('users', phone, (err, data) => {
+            if (!err && data) {
+                //Remove the password from the data
+                delete data.hashedPassword;
+                callback(200, data);
+            } else {
+                callback(400, { "Error": "There is no User available with this Phone Number." })
+            }
+        })
+    } else {
+        callback(400, { "Error": "Validation Failed/ Missing Fields" });
+    }
 }
 
 handlers.notFound = (data, callback) => {

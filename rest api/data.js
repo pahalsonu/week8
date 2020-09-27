@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const helpers = require('./helpers');
+const { parseJsonToObject } = require('./helpers');
 const fileSystem = {};
 
 fileSystem.workingDirectory = path.join(__dirname, './.data/');
@@ -35,7 +36,13 @@ fileSystem.create = (dir, file, data, callback) => {
 fileSystem.read = (dir, file, callback) => {
 
     fs.readFile(fileSystem.workingDirectory+ dir + '/' + file + '.json', 'utf-8', (err, data) => {
-        callback(err, data);
+        if (!err && data){
+            const parseData = helpers.parseJsonToObject(data);
+            callback(false,parseData)
+            
+        }else {
+            callback(err,data)
+        }
     })
 
 }
@@ -92,3 +99,19 @@ fileSystem.delete = (dir, file, callback) => {
 
 
 module.exports = fileSystem;
+
+
+
+fileSystem.readAllFiles = (dir, file, callback) => {
+
+    fs.readFile(fileSystem.workingDirectory+ dir + '/' + file + '.json', 'utf-8', (err, data) => {
+        if (!err && data){
+            const parseData = helpers.parseJsonToObject(data);
+            callback(false,parseData)
+            
+        }else {
+            callback(err,data)
+        }
+    })
+
+}
